@@ -29,7 +29,7 @@ public static class Util
         
     }
 
-    public static T GetAndAddComponent<T> (GameObject go) where T : Component
+    public static T GetAndAddComponent<T> (this GameObject go) where T : Component
     {
         T component = go.GetComponent<T>();
         if(component == null)
@@ -52,5 +52,17 @@ public static class Util
         }
 
         return null;
+    }
+
+    public static GameObject FindOrNew(string name,Transform parent = null) 
+    {
+        GameObject go = GameObject.Find(name);
+
+        if (go == null)
+            go = new GameObject { name = name};
+
+        if (parent != null)
+            go.transform.parent = parent;
+        return go;
     }
 }
