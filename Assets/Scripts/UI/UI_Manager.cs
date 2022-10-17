@@ -5,19 +5,20 @@ using System.Linq;
 
 public class UI_Manager : MonoBehaviour
 {
-    private static UI_Manager instance;    
+    private static UI_Manager instance;
 
+    int _count = 0;
     int _popupOrder = 10;
     
     Transform _pRoot;
     Transform _sRoot;
 
-
+    LinkedList<UI_Popup> _lLink = new LinkedList<UI_Popup>();
+    public int Count { get => _count; set => _count = value; }
+    public int PopupOrder { get => _popupOrder; set => _popupOrder = value; }
     public static UI_Manager UI { get => instance; set => instance = value; }
-    Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
-
+    public LinkedList<UI_Popup> Link { get => _lLink; set => _lLink = value; }
     
-
     public void Awake()
     {
         if(UI==null)
@@ -37,28 +38,31 @@ public class UI_Manager : MonoBehaviour
 
     public void CancleUI()
     {
-        if (!(_popupStack.Count >= 0))
+        if (!(Link.Count > 0))
             return;
 
-        UI_Popup pUI = _popupStack.Pop();
-
+        UI_Popup pUI = Link.First();        
+        Link.RemoveFirst();
         Destroy(pUI);
-        _popupOrder--;
+        PopupOrder--;
+        Count--;
     }
 
     public void PopUI(string name)
     {
         UI_Popup go = Util.Instantiate(name).GetAndAddComponent<UI_Popup>();
 
-        go.ThisRec.anchoredPosition = new Vector3(_popupOrder - 10, 0, 0);        
+        go.ThisRec.anchoredPosition = new Vector3(PopupOrder, 0, 0);        
         go.transform.parent = _pRoot;
 
-        _popupStack.Push(go);
+        Link.AddFirst(go); // 
 
         Canvas canvas = go.gameObject.GetAndAddComponent<Canvas>();
         canvas.overrideSorting = true;
-        canvas.sortingOrder = _popupOrder;
-        _popupOrder++;
+        canvas.sortingOrder = PopupOrder;
+        PopupOrder++;
     }
+    
+    
     
 }
