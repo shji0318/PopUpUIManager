@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class UI_Manager : MonoBehaviour
         }
 
         _pRoot = Util.FindOrNew("PopupRoot").transform;
+        PopUI("Inven");
 
     }
 
@@ -51,13 +53,15 @@ public class UI_Manager : MonoBehaviour
     public void PopUI(string name)
     {
         UI_Popup go = Util.Instantiate(name).GetAndAddComponent<UI_Popup>();
-
-        go.ThisRec.anchoredPosition = new Vector3(PopupOrder, 0, 0);        
+        
         go.transform.parent = _pRoot;
+        go.ThisRec.anchoredPosition = new Vector3((PopupOrder * 1.1f), 0, 0);
+
 
         Link.AddFirst(go); // 
 
         Canvas canvas = go.gameObject.GetAndAddComponent<Canvas>();
+        go.gameObject.GetAndAddComponent<GraphicRaycaster>();
         canvas.overrideSorting = true;
         canvas.sortingOrder = PopupOrder;
         PopupOrder++;

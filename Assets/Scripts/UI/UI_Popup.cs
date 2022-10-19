@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
 
-public class UI_Popup : UI_Base, IPointerDownHandler,IBeginDragHandler, IDragHandler,IEndDragHandler
+public class UI_Popup : UI_Base, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     RectTransform _thisRec;
     Canvas _thisCanvas;
@@ -16,28 +16,39 @@ public class UI_Popup : UI_Base, IPointerDownHandler,IBeginDragHandler, IDragHan
 
     public RectTransform ThisRec { get => _thisRec; set => _thisRec = value; }
     public Canvas ThisCanvas { get => _thisCanvas; set => _thisCanvas = value; }
+    public enum Images
+    {
+        PopupImage
+    }
 
-    enum Texts
+    public enum Texts
     {
        TitleText
     }
-    enum Buttons
+    public enum Buttons
     {
        ExitButton
     }
 
     public override void Init()
     {
-        ThisRec = GetComponent<RectTransform>();
-        ThisCanvas = Util.GetAndAddComponent<Canvas>(gameObject);
-
-        ThisCanvas.overrideSorting= true;
-        
+        Bind<Image>(typeof(Images));
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
 
+        Util.GetAndAddComponent<GraphicRaycaster>(gameObject);
+        Canvas canvas = Util.GetAndAddComponent<Canvas>(gameObject);
+        canvas.overrideSorting = true;
         
     }
+    
+
+    public void Awake()
+    {
+        ThisRec = GetComponent<RectTransform>();
+        ThisCanvas = GetComponent<Canvas>();
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (UI_Manager.UI.Count < 1)
@@ -45,8 +56,6 @@ public class UI_Popup : UI_Base, IPointerDownHandler,IBeginDragHandler, IDragHan
 
         if (UI_Manager.UI.Link.First() == this)
             return;
-
-        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -54,11 +63,11 @@ public class UI_Popup : UI_Base, IPointerDownHandler,IBeginDragHandler, IDragHan
         Debug.Log("BeginDrag");
         _beginRecPos = ThisRec.anchoredPosition;
         _beginMousePos = eventData.position;
-        
+
     }
     public void OnDrag(PointerEventData eventData)
     {
-        _moveMousePos = eventData.position - _beginMousePos  ;
+        _moveMousePos = eventData.position - _beginMousePos;
         ThisRec.anchoredPosition = _beginRecPos + _moveMousePos;
     }
 
@@ -66,4 +75,5 @@ public class UI_Popup : UI_Base, IPointerDownHandler,IBeginDragHandler, IDragHan
     {
         Debug.Log("EndDrag");
     }
+
 }

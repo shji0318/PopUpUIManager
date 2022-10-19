@@ -13,7 +13,7 @@ public abstract class UI_Base : MonoBehaviour
         Init();
     }
 
-    public static Dictionary<Type, UnityEngine.Object[]> dic = new Dictionary<Type, UnityEngine.Object[]>();
+    public Dictionary<Type, UnityEngine.Object[]> dic = new Dictionary<Type, UnityEngine.Object[]>();
 
     public void Bind<T>(Type tpye) where T : UnityEngine.Object
     {

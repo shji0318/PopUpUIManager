@@ -47,7 +47,7 @@ public static class Util
 
         foreach(T component in parentGo.GetComponentsInChildren<T>())
         {
-            if (component.name.Equals(name))
+            if (component.name == name || string.IsNullOrEmpty(name))
                 return component;
         }
 
