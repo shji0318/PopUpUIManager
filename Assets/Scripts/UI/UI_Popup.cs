@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
+using System;
 
 public class UI_Popup : UI_Base, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     RectTransform _thisRec;
     Canvas _thisCanvas;
+
+    public Action<UI_Popup> clickAction;
 
     Vector2 _beginRecPos;
     Vector2 _beginMousePos;
@@ -16,46 +19,36 @@ public class UI_Popup : UI_Base, IPointerDownHandler, IBeginDragHandler, IDragHa
 
     public RectTransform ThisRec { get => _thisRec; set => _thisRec = value; }
     public Canvas ThisCanvas { get => _thisCanvas; set => _thisCanvas = value; }
-    public enum Images
-    {
-        PopupImage
-    }
-
+    
     public enum Texts
     {
-       TitleText
+       TitleText,
+       ContentsText
     }
     public enum Buttons
     {
        ExitButton
     }
-
-    public override void Init()
-    {
-        Bind<Image>(typeof(Images));
+   
+    public override void Init()    {
+        
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
 
         Util.GetAndAddComponent<GraphicRaycaster>(gameObject);
-        Canvas canvas = Util.GetAndAddComponent<Canvas>(gameObject);
-        canvas.overrideSorting = true;
         
     }
-    
 
     public void Awake()
     {
-        ThisRec = GetComponent<RectTransform>();
-        ThisCanvas = GetComponent<Canvas>();
+        ThisRec = Util.GetAndAddComponent<RectTransform>(gameObject);
+        ThisCanvas = Util.GetAndAddComponent<Canvas>(gameObject);
+        
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (UI_Manager.UI.Count < 1)
-            return;
-
-        if (UI_Manager.UI.Link.First() == this)
-            return;
+        clickAction(this);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -75,5 +68,7 @@ public class UI_Popup : UI_Base, IPointerDownHandler, IBeginDragHandler, IDragHa
     {
         Debug.Log("EndDrag");
     }
+
+    
 
 }

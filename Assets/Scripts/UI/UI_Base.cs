@@ -13,13 +13,14 @@ public abstract class UI_Base : MonoBehaviour
         Init();
     }
 
-    public Dictionary<Type, UnityEngine.Object[]> dic = new Dictionary<Type, UnityEngine.Object[]>();
+     Dictionary<Type, UnityEngine.Object[]> dic = new Dictionary<Type, UnityEngine.Object[]>();
 
-    public void Bind<T>(Type tpye) where T : UnityEngine.Object
+    public void Bind<T>(Type type) where T : UnityEngine.Object
     {
-        string[] names = Enum.GetNames(tpye);
+        string[] names = Enum.GetNames(type);
 
         UnityEngine.Object[] obj = new UnityEngine.Object[names.Length];
+        dic.Add(typeof(T), obj);
 
         for(int i = 0; i<names.Length; i++)
         {

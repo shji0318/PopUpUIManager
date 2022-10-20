@@ -33,7 +33,7 @@ public class UI_Manager : MonoBehaviour
 
         _pRoot = Util.FindOrNew("PopupRoot").transform;
         PopUI("Inven");
-
+        
     }
 
     
@@ -48,24 +48,45 @@ public class UI_Manager : MonoBehaviour
         Destroy(pUI);
         PopupOrder--;
         Count--;
+        if (Count == 0)
+            PopupOrder = 10;
     }
 
     public void PopUI(string name)
     {
         UI_Popup go = Util.Instantiate(name).GetAndAddComponent<UI_Popup>();
-        
-        go.transform.parent = _pRoot;
-        go.ThisRec.anchoredPosition = new Vector3((PopupOrder * 1.1f), 0, 0);
 
+        go.clickAction -= ClickFocus;
+        go.clickAction += ClickFocus;
 
-        Link.AddFirst(go); // 
+        go.transform.SetParent(_pRoot);
+        go.ThisRec.anchoredPosition = new Vector3((Count * 10f)-10, 0, 0);
+
+        Link.AddFirst(go);
 
         Canvas canvas = go.gameObject.GetAndAddComponent<Canvas>();
-        go.gameObject.GetAndAddComponent<GraphicRaycaster>();
         canvas.overrideSorting = true;
-        canvas.sortingOrder = PopupOrder;
+        canvas.sortingOrder = PopupOrder;        
         PopupOrder++;
+        Count++;
+
     }
+
+    public void ClickFocus(UI_Popup up)
+    {        
+        if (Count <= 1)
+            return; 
+
+        if (up == Link.First())
+            return;
+
+        Link.Remove(up);
+        Link.AddFirst(up);
+        up.ThisCanvas.sortingOrder = ++_popupOrder;
+        up.Get<Text>((int)UI_Popup.Texts.ContentsText).text = $"NowOrder = {up.ThisCanvas.sortingOrder}";
+    }
+
+    
     
     
     
