@@ -30,13 +30,14 @@ public class UI_Popup : UI_Base, IPointerDownHandler, IBeginDragHandler, IDragHa
        ExitButton
     }
    
-    public override void Init()    {
-        
+    public override void Init()    
+    {        
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
 
         Util.GetAndAddComponent<GraphicRaycaster>(gameObject);
-        
+        NowOrder(this);
+        clickAction += NowOrder;
     }
 
     public void Awake()
@@ -67,6 +68,11 @@ public class UI_Popup : UI_Base, IPointerDownHandler, IBeginDragHandler, IDragHa
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("EndDrag");
+    }
+
+    public void NowOrder(UI_Popup up)
+    {
+        up.Get<Text>((int)Texts.ContentsText).text = $"현재 Order = {ThisCanvas.sortingOrder}";
     }
 
     

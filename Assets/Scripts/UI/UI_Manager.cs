@@ -31,28 +31,37 @@ public class UI_Manager : MonoBehaviour
             Destroy(this);
         }
 
-        _pRoot = Util.FindOrNew("PopupRoot").transform;
-        PopUI("Inven");
-        
+        _pRoot = Util.FindOrNew("PopupRoot").transform;       
     }
-
-    
 
     public void CancleUI()
     {
         if (!(Link.Count > 0))
             return;
 
-        UI_Popup pUI = Link.First();        
+        UI_Popup up = Link.First();        
         Link.RemoveFirst();
-        Destroy(pUI);
+        Destroy(up.gameObject);
         PopupOrder--;
         Count--;
         if (Count == 0)
             PopupOrder = 10;
     }
 
-    public void PopUI(string name)
+    public bool CancleUIOnKey(UI_Popup up)
+    {
+        if (up == null)
+            return false;
+
+        Link.Remove(up);
+        Destroy(up.gameObject);
+        Count--;
+        if (Count == 0)
+            PopupOrder = 10;
+        return true;
+    }
+    
+    public UI_Popup PopUI(string name)
     {
         UI_Popup go = Util.Instantiate(name).GetAndAddComponent<UI_Popup>();
 
@@ -69,7 +78,7 @@ public class UI_Manager : MonoBehaviour
         canvas.sortingOrder = PopupOrder;        
         PopupOrder++;
         Count++;
-
+        return go;
     }
 
     public void ClickFocus(UI_Popup up)
@@ -82,12 +91,6 @@ public class UI_Manager : MonoBehaviour
 
         Link.Remove(up);
         Link.AddFirst(up);
-        up.ThisCanvas.sortingOrder = ++_popupOrder;
-        up.Get<Text>((int)UI_Popup.Texts.ContentsText).text = $"NowOrder = {up.ThisCanvas.sortingOrder}";
+        up.ThisCanvas.sortingOrder = _popupOrder++;        
     }
-
-    
-    
-    
-    
 }
