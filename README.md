@@ -1,6 +1,6 @@
 # PopUpUIManager   
 <H2> 유니티 포트폴리오를 위해 제작한 PopupUI 관리 매니저 입니다.</H2>   
-Youtube
-: [Youtube][YoutubeLink]
+<img src="https://img.shields.io/badge/Blog-6DB33F?style=for-the-badge&logo=Blog&logoColor=white">
+: [Blog][bloglink]
 
-[YoutubeLink]: https://www.youtube.com/watch?v=ulQx1N8ooyo&list=PLpCkh0nCtd9Xy97wT6hbNCbZv6pFWh4zf&index=5 "go Youtube"
+[bloglink]: https://blog.naver.com/ji980207 "go blog"
